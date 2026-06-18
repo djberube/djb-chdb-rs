@@ -1,14 +1,14 @@
-use chdb::{flag, option, Query};
+use chdb::Connection;
 
-fn main() {
-    let result = Query::new("SELECT number FROM numbers(10)")
-        .option(option!("format", "TSVWithNames"))
-        .option(flag!("verbose"))
-        .exec()
-        .unwrap();
+fn main() -> Result<(), chdb::Error> {
+    let conn = Connection::new()?;
+
+    let result = conn.query("SELECT number FROM numbers(10)", "TSVWithNames")?;
 
     println!("Elapsed: {}", result.elapsed);
     println!("Rows: {}", result.rows_read);
     println!("Bytes: {}", result.bytes_read);
-    println!("Result:\n{}", result.to_string().unwrap());
+    println!("Result:\n{}", result.data_utf8()?);
+
+    Ok(())
 }

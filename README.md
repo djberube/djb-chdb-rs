@@ -4,7 +4,15 @@ Use clickhouse as library, based on `clickhouse local`
 
 ### Requirements:
 
-You should have [libchdb](https://github.com/metrico/libchdb#package-installation)
+This crate links against `libchdb.so`, vendored under `vendor/chdb/` from
+[chdb-core](https://github.com/chdb-io/chdb-core). The shared object is ~530MB
+and is not committed; fetch it with:
+
+```
+./scripts/fetch-libchdb.sh
+```
+
+In the devenv shell this runs automatically on entry if the library is missing.
 
 ### Install
 
@@ -27,21 +35,23 @@ Powered by:
 ## Usage
 
 ```rust
-use chdb::{flag, option, Query};
+use chdb::Connection;
 
-let result = Query::new("SELECT number FROM numbers(10)")
-    .option(option!("format", "TSVWithNames"))
-    .option(flag!("verbose"))
-    .exec()
+// In-memory database (`:memory:`). Pass a path to persist:
+// `Connection::open("/tmp/mydb")`.
+let conn = Connection::new().unwrap();
+
+let result = conn
+    .query("SELECT number FROM numbers(10)", "TSVWithNames")
     .unwrap();
 
 println!("Elapsed: {}", result.elapsed);
 println!("Rows: {}", result.rows_read);
 println!("Bytes: {}", result.bytes_read);
-println!("Result:\n{}", result.to_string().unwrap());
+println!("Result:\n{}", result.data_utf8().unwrap());
 ```
 
-Otputs:
+Outputs:
 ```
 SELECT number FROM numbers(10)
 Elapsed: 0.007413874

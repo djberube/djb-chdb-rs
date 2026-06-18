@@ -1,0 +1,8 @@
+chdb-core v26.5.0
+source: https://github.com/chdb-io/chdb-core/releases/tag/v26.5.0
+asset:  linux-x86_64-libchdb.tar.gz
+
+Contains libchdb.so (the embedded ClickHouse engine), chdb.h (C API),
+and chdb.hpp (C++ API). Only libchdb.so + chdb.h are used by this crate.
+
+libchdb.so is gitignored (~530MB). Run scripts/fetch-libchdb.sh to download it.

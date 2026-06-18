@@ -1,1 +1,4 @@
 /target
+
+# Vendored libchdb shared object is ~530MB; fetched by scripts/fetch-libchdb.sh
+/vendor/chdb/libchdb.so
